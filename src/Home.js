@@ -1,8 +1,37 @@
 import React, { useState } from 'react'
 import uploader from './Images/uploader.png'
 import downloader from './Images/download.png'
+import Item from './Item'
 const Home = () => {
-    const [item, setItem] = useState({ item_name: '', item_qty: '', item_rate: '', item_tax: '', item_total: '0.00', item_desc: '' })
+    const [addMore, setAddMore] = useState(true)
+    const [item, setItem] = useState({ id: Math.random().toString(), item_name: '', item_qty: '', item_rate: '', item_tax: '', item_desc: '' })
+    const [items, setItems] = useState([]);
+
+
+    //Adding Items
+    const addItems = () => {
+        if (item.item_name !== '' || item.item_qty !== '' || item.item_rate !== '' || item.item_tax !== '' || item.item_desc !== '') {
+            setItems(items.concat(item))
+            setItem({id:Math.random().toString(), item_name: '', item_qty: '', item_rate: '', item_tax: '', item_total: '0.00', item_desc: '' })
+            setAddMore(false);
+            alert(item.id)
+        }
+        else {
+            alert('Warning\n\nPlease enter all the data of item')
+        }
+    }
+    const itemOnChange = (e) => {
+        setItem({ ...item, [e.target.name]: e.target.value })
+    }
+
+    //Deleting an Item
+    const deleteItem = (id) => {
+        const newList = items.filter((item) => {
+            return item.id !== id;
+        })
+        setItems(newList);
+    }
+
 
     return (
         <>
@@ -26,7 +55,7 @@ const Home = () => {
                         <div className="mt-1 bg-slate-50 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                             <div className="left flex flex-col items-center">
                                 <img src={uploader} alt="upload here" className='w-10' />
-                                <p className='text-center'>Drag your logo here, or <p className='text-emerald-500 font-bold' >browse</p></p>
+                                <span className='text-center'>Drag your logo here, or <p className='text-emerald-500 font-bold' >browse</p> </span>
                                 <p className='text-zinc-500 '>Max. File size: 25 MB</p>
                             </div>
                         </div>
@@ -103,26 +132,31 @@ const Home = () => {
 
                     <hr />
 
-                    <div className='flex justify-between py-2 text-gray-700 font-semibold'>
+                    {items.map((item) => {
+                        return <Item deleteItem={deleteItem} key={item.name} item={item} />
+                    })}
+
+                    {addMore && <><div className='flex justify-between py-2 text-gray-700 font-semibold'>
                         <div>
-                            <input type="text" name="item_name" id="item_name" placeholder='Item Name' className='mt-1 border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm w-full ' />
+                            <input value={item.item_name} onChange={itemOnChange} type="text" name="item_name" id="item_name" placeholder='Item Name' className='mt-1 border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm w-full ' />
                         </div>
 
                         <div className='flex justify-between xl:gap-12 md:gap-14 sm:gap-10 s:gap-11 2xl:pr-0 md:pr-7 sm:pr-10 s:pr-4 pr-16'>
                             <span></span>
-                            <input type="text" name="item_qty" id="item_qty" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-20 md:w-20 sm:w-12 s:w-12 w-20    ' />
-                            <input type="text" name="item_rate" id="item_rate" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-20 md:w-20 sm:w-12 s:w-12 w-20    ' />
-                            <input type="text" name="item_tax" id="item_tax" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-20 md:w-20 sm:w-12 s:w-12 w-20    ' />
-                            <span className='lg:w-20'>{item.item_total}</span>
+                            <input value={item.item_qty} onChange={itemOnChange} type="text" name="item_qty" id="item_qty" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-20 md:w-20 sm:w-12 s:w-12 w-20    ' />
+                            <input value={item.item_rate} onChange={itemOnChange} type="text" name="item_rate" id="item_rate" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-20 md:w-20 sm:w-12 s:w-12 w-20    ' />
+                            <input value={item.item_tax} onChange={itemOnChange} type="text" name="item_tax" id="item_tax" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-20 md:w-20 sm:w-12 s:w-12 w-20    ' />
+                            <span className='lg:w-20'>{item.item_qty * item.item_rate}</span>
                         </div>
                     </div>
-                    <div>
-                        <input type="text" name="item_desc" id="item_desc" placeholder='Description' className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-96' />
-                    </div>
+                        <div className='flex justify-between items-center pr-12'>
+                            <input onChange={itemOnChange} type="text" name="item_desc" id="item_desc" placeholder='Description' className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-96' />
+                            <i onClick={addItems} className="fa fa-check-circle text-emerald-500 cursor-pointer" aria-hidden="true"></i>
+                        </div></>}
 
                     <hr className='mt-6' />
 
-                    <span className='text-emerald-500 font-bold mt-1 cursor-pointer'>Add Invoice Item</span>
+                    <span onClick={() => { setAddMore(true) }} className='text-emerald-500 font-bold mt-1 cursor-pointer'>Add Invoice Item</span>
 
                     <div className='flex justify-between flex-col xl:flex-row md:flex-row 2xl:flex-row sm:flex-row'>
 
