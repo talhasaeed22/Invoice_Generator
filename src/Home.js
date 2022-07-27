@@ -15,13 +15,13 @@ const Home = () => {
                 <h1 className=' font-bold text-3xl'>Quickly Create</h1>
                 <h1 className=' font-bold text-3xl'>and send invoices</h1>
 
-                <h6 className='my-2 text-xl'>Fill your invoice details below, choose templete and then download/send/share it</h6>
+                <h6 className='my-2 text-xl text-center'>Fill your invoice details below, choose templete and then download/send/share it</h6>
             </div>
 
-            <div className="form py-4 lg:px-64 relative -top-10  ">
+            <div className="form py-4 2xl:px-72 xl:px-56 lg:px-36 md:px-20 sm:px-12 s:px-6 relative -top-12  ">
                 <div className='flex flex-col border p-6  shadow-lg shadow-gray-500/50 bg-white rounded-md'>
 
-                    <div className='flex flex-row justify-between'>
+                    <div className='flex flex-col xl:flex-row md:flex-row 2xl:flex-row sm:flex-row justify-between'>
 
                         <div className="mt-1 bg-slate-50 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                             <div className="left flex flex-col items-center">
@@ -31,7 +31,7 @@ const Home = () => {
                             </div>
                         </div>
 
-                        <div className="right flex flex-col gap-1 ">
+                        <div className="right flex flex-col gap-1 s:my-4 s:items-center ">
 
                             <div className='flex items-center justify-end gap-2'>
                                 <label htmlFor="invoice">Invoice #:</label>
@@ -68,10 +68,10 @@ const Home = () => {
 
                     </div>
 
-                    <div className='flex flex-row justify-between py-10'>
+                    <div className='flex flex-col 2xl:flex-row xl:flex-row lg:flex-row md:flex-row sm:flex-row justify-between py-10'>
                         <div >
                             <h5 className='font-semibold text-gray-700'>From</h5>
-                            <div className="mt-1 cursor-pointer gap-1 bg-slate-50 flex flex-col justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md w-96">
+                            <div className="mt-1 cursor-pointer gap-1 bg-slate-50 flex flex-col justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md xl-w-96 lg:w-80 md:w-64">
                                 <span className='font-semibold text-gray-600'>Sender Name</span>
                                 <span className='text-zinc-400'>Sender Contact Details</span>
                             </div>
@@ -79,7 +79,7 @@ const Home = () => {
 
                         <div>
                             <h5 className='font-semibold text-gray-700'>To</h5>
-                            <div className="mt-1 cursor-pointer gap-1 bg-slate-50 flex flex-col justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md w-96">
+                            <div className="mt-1 cursor-pointer gap-1 bg-slate-50 flex flex-col justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md xl-w-96 lg:w-80 md:w-64">
                                 <span className='font-semibold text-gray-600'>Recipient Name</span>
                                 <span className='text-zinc-400'>Recipient Contact Details</span>
                             </div>
@@ -93,7 +93,7 @@ const Home = () => {
                             <span>ITEM</span>
                         </div>
 
-                        <div className='flex justify-between gap-14 pr-7'>
+                        <div className='flex justify-between 2xl:gap-20 xl:gap-20 lg:gap-24 md:gap-16 sm:gap-8 s:gap-7 pr-7'>
                             <span>HRS/QTY</span>
                             <span>RATE</span>
                             <span>TAX</span>
@@ -108,11 +108,11 @@ const Home = () => {
                             <input type="text" name="item_name" id="item_name" placeholder='Item Name' className='mt-1 border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm w-full ' />
                         </div>
 
-                        <div className='flex justify-between gap-7 '>
+                        <div className='flex justify-between xl:gap-12 md:gap-14 sm:gap-10 s:gap-11 2xl:pr-0 md:pr-7 sm:pr-10 s:pr-4 pr-16'>
                             <span></span>
-                            <input type="text" name="item_qty" id="item_qty" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-20 ' />
-                            <input type="text" name="item_rate" id="item_rate" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-20 ' />
-                            <input type="text" name="item_tax" id="item_tax" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-20 ' />
+                            <input type="text" name="item_qty" id="item_qty" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-20 md:w-20 sm:w-12 s:w-12 w-20    ' />
+                            <input type="text" name="item_rate" id="item_rate" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-20 md:w-20 sm:w-12 s:w-12 w-20    ' />
+                            <input type="text" name="item_tax" id="item_tax" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-20 md:w-20 sm:w-12 s:w-12 w-20    ' />
                             <span className='lg:w-20'>{item.item_total}</span>
                         </div>
                     </div>
@@ -124,25 +124,25 @@ const Home = () => {
 
                     <span className='text-emerald-500 font-bold mt-1 cursor-pointer'>Add Invoice Item</span>
 
-                    <div className='flex justify-between'>
+                    <div className='flex justify-between flex-col xl:flex-row md:flex-row 2xl:flex-row sm:flex-row'>
 
                         <div className='left p-5 flex flex-col '>
                             <span className='font-semibold text-gray-700 my-2'>Notes</span>
-                            <textarea className='border border-gray-300 rounded resize-none py-1 px-3' name="notes" id="notes" cols="70" rows="2"></textarea>
+                            <textarea className='border border-gray-300 rounded resize-none py-1 px-3 lg:w-80 md:w-80 sm:w-64 w-56' name="notes" id="notes" cols="60" rows="2"></textarea>
                         </div>
 
                         <div className='right text-base p-5 w-fill'>
-                            <div className='flex gap-56 my-3'>
+                            <div className='flex 2xl:gap-56 xl:gap-36 lg:gap-24 md:gap-16 sm:gap-12 gap-7 my-3'>
                                 <span>Subtotal</span>
                                 <span>0.00</span>
                             </div>
-                            <div className='flex gap-56 my-3'>
+                            <div className='flex 2xl:gap-56 xl:gap-36 lg:gap-24 md:gap-16 sm:gap-12 my-3'>
                                 <span>Tax</span>
                                 <span></span>
                             </div>
 
                             <hr />
-                            <div className='flex gap-56 my-3 font-bold text-gray-800 text-lg'>
+                            <div className='flex 2xl:gap-56 xl:gap-36 lg:gap-24 md:gap-16 sm:gap-12 my-3 font-bold text-gray-800 2xl:text-lg lg:text-lg md:text-lg text-sm'>
                                 <span>Total(USD)</span>
                                 <span>0.00</span>
                             </div>
