@@ -297,7 +297,7 @@ const Home = () => {
                 <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
 
                 <div className="fixed z-10 inset-0 overflow-y-auto">
-                    <div className="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+                    <div className=" 2xl:flex xl:flex lg:flex md:flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
 
                         <div className="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
                             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
@@ -308,7 +308,7 @@ const Home = () => {
                                     </div>
 
                                     <div className="">
-                                        <div className='flex justify-between mt-10'>
+                                        <div className='flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col items-center justify-between mt-10'>
                                             <div>
                                                 <label htmlFor="name" className="block text-sm font-medium text-gray-700">Comapny/Client Name</label>
                                                 <input onChange={onChangeSender} type="text" name="name" id="name" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Company/Client Name" />
@@ -326,51 +326,51 @@ const Home = () => {
                                                 </select>
                                             </div>
                                         </div>
-                                        <div className='flex justify-between mt-5'>
-                                            <div>
+                                        <div className='flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col sm:items-start justify-between mt-5'>
+                                            <div className='flex flex-col'>
                                                 <label htmlFor="fname" className="block text-sm font-medium text-gray-700">Last Name</label>
                                                 <input onChange={onChangeSender} type="text" name="fname" id="fname" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="First Name" />
                                             </div>
-                                            <div>
+                                            <div className='flex flex-col'>
                                                 <label htmlFor="lname" className="block text-sm font-medium text-gray-700">Last Name</label>
                                                 <input onChange={onChangeSender} type="text" name="lname" id="lname" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Last Name" />
                                             </div>
                                         </div>
 
-                                        <div className='flex justify-between mt-5'>
-                                            <div>
+                                        <div className='flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col sm:items-start justify-between mt-5'>
+                                            <div className='flex flex-col'>
                                                 <label htmlFor="tax" className="block text-sm font-medium text-gray-700">Tax Registration No.</label>
                                                 <input onChange={onChangeSender} type="text" name="tax" id="tax" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Tax Registration No." />
                                             </div>
-                                            <div>
+                                            <div className='flex flex-col'>
                                                 <label htmlFor="Email" className="block text-sm font-medium text-gray-700">Email</label>
                                                 <input onChange={onChangeSender} type="text" name="Email" id="Email" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Email" />
                                             </div>
                                         </div>
 
                                         <div className='mt-5'>
-                                            <div>
+                                            <div className='flex flex-col'>
                                                 <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address 1</label>
-                                                <textarea onChange={onChangeSender} className='border focus:outline-none border-gray-300 rounded  py-1 px-3' name="address" id="address" cols="57" rows="1"></textarea>
+                                                <textarea onChange={onChangeSender} className='border focus:outline-none border-gray-300 rounded py-1 px-3' name="address" id="address"  rows="1"></textarea>
                                             </div>
 
                                         </div>
 
                                         <div className='mt-5'>
-                                            <div>
+                                            <div className='flex flex-col'>
                                                 <label htmlFor="address2" className="block text-sm font-medium text-gray-700">Address 2</label>
-                                                <textarea onChange={onChangeSender} className='border border-gray-300 rounded focus:outline-none py-1 px-3 ' name="address2" id="address2" cols="57" rows="1"></textarea>
+                                                <textarea onChange={onChangeSender} className='border border-gray-300 rounded focus:outline-none py-1 px-3 ' name="address2" id="address2" rows="1"></textarea>
                                             </div>
 
                                         </div>
 
 
-                                        <div className='flex justify-between mt-5'>
-                                            <div>
+                                        <div className='flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col sm:items-start justify-between mt-5'>
+                                            <div className='flex flex-col'>
                                                 <label htmlFor="Phone" className="block text-sm font-medium text-gray-700">Phone</label>
                                                 <input onChange={onChangeSender} type="text" name="Phone" id="Phone" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Phone" />
                                             </div>
-                                            <div>
+                                            <div className='flex flex-col'>
                                                 <label htmlFor="Website" className="block text-sm font-medium text-gray-700">Website</label>
                                                 <input onChange={onChangeSender} type="text" name="Website" id="Website" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Website" />
                                             </div>
@@ -394,7 +394,7 @@ const Home = () => {
                 <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
 
                 <div className="fixed z-10 inset-0 overflow-y-auto">
-                    <div className="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+                    <div className="  2xl:flex xl:flex lg:flex md:flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
 
                         <div className="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
                             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
@@ -405,10 +405,10 @@ const Home = () => {
                                     </div>
 
                                     <div className="">
-                                        <div className='flex justify-between mt-10'>
+                                        <div className='flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col items-center justify-between mt-10'>
                                             <div>
                                                 <label htmlFor="Cname" className="block text-sm font-medium text-gray-700">Comapny/Client Name</label>
-                                                <input onChange={onClientChange} type="text" name="Cname" id="Cname" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Company/Client Name" />
+                                                <input onChange={onClientChange} type="text" name="Cname" id="Cname" className="border focus:outline-none border-gray-300 rounded p-2 " placeholder="Company/Client Name" />
                                             </div>
                                             <div>
                                                 <label htmlFor="Ccountry" className="block text-sm font-medium text-gray-700">Country</label>
@@ -423,40 +423,40 @@ const Home = () => {
                                                 </select>
                                             </div>
                                         </div>
-                                        <div className='flex justify-between mt-5'>
-                                            <div>
-                                                <label htmlFor="Cfname" className="block text-sm font-medium text-gray-700">Last Name</label>
+                                        <div className='flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col sm:items-start justify-between mt-5'>
+                                            <div  className='flex flex-col'>
+                                                <label htmlFor="Cfname" className="block text-sm font-medium text-gray-700">First Name</label>
                                                 <input onChange={onClientChange} type="text" name="Cfname" id="Cfname" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="First Name" />
                                             </div>
-                                            <div>
+                                            <div  className='flex flex-col'>
                                                 <label htmlFor="Clname" className="block text-sm font-medium text-gray-700">Last Name</label>
                                                 <input onChange={onClientChange} type="text" name="Clname" id="Clname" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Last Name" />
                                             </div>
                                         </div>
 
-                                        <div className='flex justify-between mt-5'>
-                                            <div>
+                                        <div className='flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col sm:items-start justify-between mt-5'>
+                                            <div className='flex flex-col'>
                                                 <label htmlFor="CEmail" className="block text-sm font-medium text-gray-700">Email</label>
                                                 <input onChange={onClientChange} type="text" name="CEmail" id="CEmail" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Email" />
                                             </div>
-                                            <div>
+                                            <div className='flex flex-col'>
                                                 <label htmlFor="CPhone" className="block text-sm font-medium text-gray-700">Phone</label>
                                                 <input onChange={onClientChange} type="text" name="CPhone" id="CPhone" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Phone" />
                                             </div>
                                         </div>
 
                                         <div className='mt-5'>
-                                            <div>
+                                            <div className='flex flex-col'>
                                                 <label htmlFor="Caddress" className="block text-sm font-medium text-gray-700">Address 1</label>
-                                                <textarea onChange={onClientChange} className='border focus:outline-none border-gray-300 rounded  py-1 px-3' name="Caddress" id="Caddress" cols="57" rows="1"></textarea>
+                                                <textarea onChange={onClientChange} className='border focus:outline-none border-gray-300 rounded py-1 px-3' name="Caddress" id="Caddress" rows="1"></textarea>
                                             </div>
 
                                         </div>
 
                                         <div className='mt-5'>
-                                            <div>
+                                            <div className='flex flex-col'>
                                                 <label htmlFor="Caddress2" className="block text-sm font-medium text-gray-700">Address 2</label>
-                                                <textarea onChange={onClientChange} className='border border-gray-300 rounded focus:outline-none py-1 px-3 ' name="Caddress2" id="Caddress2" cols="57" rows="1"></textarea>
+                                                <textarea onChange={onClientChange} className='border border-gray-300 rounded focus:outline-none py-1 px-3' name="Caddress2" id="Caddress2"rows="1"></textarea>
                                             </div>
 
                                         </div>
