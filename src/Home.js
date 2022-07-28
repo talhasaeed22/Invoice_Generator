@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import uploader from './Images/uploader.png'
 import downloader from './Images/download.png'
 import Item from './Item'
@@ -6,13 +6,35 @@ const Home = () => {
     const [addMore, setAddMore] = useState(true)
     const [item, setItem] = useState({ id: Math.random().toString(), item_name: '', item_qty: '', item_rate: '', item_tax: '', item_desc: '' })
     const [items, setItems] = useState([]);
+    const [imageURL, setImageURL] = useState('')
+    const [imageLoaded, setImageLoaded] = useState(false)
+
+    //Modal Related
+    const [showModal, setShowModal] = useState(false)
+    const [showClientModal, setShowClientModal] = useState(false)
+
+    //Image Related 
+    const inpRef = useRef();
+
+    const loadImage = () => {
+        inpRef.current.click();
+    }
+
+    const handleImage = (e) => {
+        const images = e.target.files[0];
+        console.log(images)
+        const urlImage = URL.createObjectURL(images);
+        console.log(urlImage)
+        setImageURL(urlImage);
+        setImageLoaded(true);
+    }
 
 
     //Adding Items
     const addItems = () => {
         if (item.item_name !== '' || item.item_qty !== '' || item.item_rate !== '' || item.item_tax !== '' || item.item_desc !== '') {
             setItems(items.concat(item))
-            setItem({id:Math.random().toString(), item_name: '', item_qty: '', item_rate: '', item_tax: '', item_total: '0.00', item_desc: '' })
+            setItem({ id: Math.random().toString(), item_name: '', item_qty: '', item_rate: '', item_tax: '', item_total: '0.00', item_desc: '' })
             setAddMore(false);
             alert(item.id)
         }
@@ -22,14 +44,54 @@ const Home = () => {
     }
     const itemOnChange = (e) => {
         setItem({ ...item, [e.target.name]: e.target.value })
+
     }
+
 
     //Deleting an Item
     const deleteItem = (id) => {
         const newList = items.filter((item) => {
+
             return item.id !== id;
         })
         setItems(newList);
+    }
+
+
+    //Sender Data
+    const [sender, setSender] = useState({ name: '', country: '', fname: '', lname: '', tax: '', Email: '', address: '', address2: '', Phone: '', Website: '' })
+    const [showSender, setShowSender] = useState(false)
+    const onChangeSender = (event) => {
+        setSender({ ...sender, [event.target.name]: event.target.value })
+    }
+
+    const updateSender = () => {
+        if (sender.name !== '' || sender.country !== '' || sender.fname !== '' || sender.lname !== '' || sender.tax !== '' || sender.Email !== '' || sender.address !== '' || sender.address2 !== '' || sender.Phone !== '' || sender.Website !== '') {
+            setShowModal(false);
+            setShowSender(true)
+        }
+        else {
+            alert('Warning\n\nPlease enter all the data of item')
+        }
+    }
+
+    //Recipient Data
+    const [recipient, setRecipient] = useState({ Cname: '', Ccountry: '', Cfname: '', Clname: '', CEmail: '', Caddress: '', Caddress2: '', CPhone: '', extra: '' })
+    const [showRecipient, setShowRecipient] = useState(false)
+
+    const onClientChange = (event) => {
+        setRecipient({ ...recipient, [event.target.name]: event.target.value })
+
+    }
+
+    const updateRecipient = () => {
+        if (recipient.Cname !== '' || recipient.Ccountry !== '' || recipient.Cfname !== '' || recipient.Clname !== '' || recipient.CEmail !== '' || recipient.Caddress !== '' || recipient.Caddress2 !== '' || recipient.CPhone !== '' || recipient.extra !== '') {
+            setShowClientModal(false)
+            setShowRecipient(true)
+        }
+        else {
+            alert('Warning\n\nPlease enter all the data of item')
+        }
     }
 
 
@@ -52,13 +114,13 @@ const Home = () => {
 
                     <div className='flex flex-col xl:flex-row md:flex-row 2xl:flex-row sm:flex-row justify-between'>
 
-                        <div className="mt-1 bg-slate-50 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                        {imageLoaded === false ? <div onClick={loadImage} className="mt-1 bg-slate-50 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md cursor-pointer">
                             <div className="left flex flex-col items-center">
                                 <img src={uploader} alt="upload here" className='w-10' />
-                                <span className='text-center'>Drag your logo here, or <p className='text-emerald-500 font-bold' >browse</p> </span>
+                                <span className='text-center'>Drag your logo here, or <input ref={inpRef} onChange={handleImage} className='hidden' type="file" name="" id="" /> <p className='text-emerald-500 font-bold' >browse</p> </span>
                                 <p className='text-zinc-500 '>Max. File size: 25 MB</p>
                             </div>
-                        </div>
+                        </div> : <div> <img className='w-52' src={imageURL} alt="" /> </div>}
 
                         <div className="right flex flex-col gap-1 s:my-4 s:items-center ">
 
@@ -100,18 +162,55 @@ const Home = () => {
                     <div className='flex flex-col 2xl:flex-row xl:flex-row lg:flex-row md:flex-row sm:flex-row justify-between py-10'>
                         <div >
                             <h5 className='font-semibold text-gray-700'>From</h5>
-                            <div className="mt-1 cursor-pointer gap-1 bg-slate-50 flex flex-col justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md xl-w-96 lg:w-80 md:w-64">
-                                <span className='font-semibold text-gray-600'>Sender Name</span>
-                                <span className='text-zinc-400'>Sender Contact Details</span>
-                            </div>
+                            {showSender === false ?
+
+                                <div onClick={() => { setShowModal(true) }} className="mt-1 cursor-pointer gap-1 bg-slate-50 flex flex-col justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md xl-w-96 lg:w-80 md:w-64">
+                                    <span className='font-semibold text-gray-600'>Sender Name</span>
+                                    <span className='text-zinc-400'>Sender Contact Details</span>
+                                </div>
+
+                                :
+
+                                <div className='my-2'>
+                                    <p className='font-bold'> {sender.name}</p>
+                                    <p>{sender.fname} {sender.lname}</p>
+                                    <p>{sender.address}</p>
+                                    <p>{sender.address2}</p>
+                                    <p>{sender.country}</p>
+                                    <div className='my-3'></div>
+                                    <p>{sender.Email}</p>
+                                    <p>{sender.Phone}</p>
+                                    <p>{sender.Website}</p>
+                                    <div className='my-3'></div>
+                                    <p>Tax Registration Number</p>
+                                    <p>{sender.tax}</p>
+
+                                </div>
+                            }
                         </div>
 
                         <div>
                             <h5 className='font-semibold text-gray-700'>To</h5>
-                            <div className="mt-1 cursor-pointer gap-1 bg-slate-50 flex flex-col justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md xl-w-96 lg:w-80 md:w-64">
-                                <span className='font-semibold text-gray-600'>Recipient Name</span>
-                                <span className='text-zinc-400'>Recipient Contact Details</span>
-                            </div>
+                            {showRecipient === false ?
+
+                                <div onClick={() => { setShowClientModal(true) }} className="mt-1 cursor-pointer gap-1 bg-slate-50 flex flex-col justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md xl-w-96 lg:w-80 md:w-64">
+                                    <span className='font-semibold text-gray-600'>Recipient Name</span>
+                                    <span className='text-zinc-400'>Recipient Contact Details</span>
+                                </div>
+                                :
+                                <div className='my-2'>
+                                    <p className='font-bold'> {recipient.Cname}</p>
+                                    <p>{recipient.Cfname} {recipient.Clname}</p>
+                                    <p>{recipient.Caddress}</p>
+                                    <p>{recipient.Caddress2}</p>
+                                    <p>{recipient.Ccountry}</p>
+                                    <p>{recipient.extra}</p>
+                                    <div className='my-3'></div>
+                                    <p>{recipient.CEmail}</p>
+                                    <p>{recipient.CPhone}</p>
+
+                                </div>
+                            }
                         </div>
                     </div>
 
@@ -188,7 +287,197 @@ const Home = () => {
                     <button className='border border-emerald-500 rounded-lg  py-2 px-7 font-semibold'>Reset</button>
                     <button className='border flex items-center gap-2 bg-emerald-500 rounded-lg text-white py-2 px-10 font-semibold'> <img src={downloader} alt="" /> Download</button>
                 </div>
+            </div>
 
+
+            {/* //Modal */}
+
+            <div className={`relative z-10 ${!showModal && 'hidden'}`} aria-labelledby="modal-title" role="dialog" aria-modal="true">
+
+                <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+
+                <div className="fixed z-10 inset-0 overflow-y-auto">
+                    <div className="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+
+                        <div className="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                            <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                <div className="">
+                                    <div className='flex justify-between'>
+                                        <h3 className='font-semibold'>Sender Contact Details</h3>
+                                        <i onClick={() => { setShowModal(false) }} className="fa fa-times text-gray-700 cursor-pointer" aria-hidden="true"></i>
+                                    </div>
+
+                                    <div className="">
+                                        <div className='flex justify-between mt-10'>
+                                            <div>
+                                                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Comapny/Client Name</label>
+                                                <input onChange={onChangeSender} type="text" name="name" id="name" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Company/Client Name" />
+                                            </div>
+                                            <div>
+                                                <label htmlFor="country" className="block text-sm font-medium text-gray-700">Country</label>
+                                                <select onChange={onChangeSender} id="country" name="country" className="border-gray-300 focus:outline-none p-1 border h-3/4 bg-transparent text-gray-800 text-sm font-bold rounded">
+                                                    <option>United State</option>
+                                                    <option>China</option>
+                                                    <option>Pakistan</option>
+                                                    <option>Germany</option>
+                                                    <option>Australia</option>
+                                                    <option>Korea</option>
+                                                    <option>India</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className='flex justify-between mt-5'>
+                                            <div>
+                                                <label htmlFor="fname" className="block text-sm font-medium text-gray-700">Last Name</label>
+                                                <input onChange={onChangeSender} type="text" name="fname" id="fname" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="First Name" />
+                                            </div>
+                                            <div>
+                                                <label htmlFor="lname" className="block text-sm font-medium text-gray-700">Last Name</label>
+                                                <input onChange={onChangeSender} type="text" name="lname" id="lname" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Last Name" />
+                                            </div>
+                                        </div>
+
+                                        <div className='flex justify-between mt-5'>
+                                            <div>
+                                                <label htmlFor="tax" className="block text-sm font-medium text-gray-700">Tax Registration No.</label>
+                                                <input onChange={onChangeSender} type="text" name="tax" id="tax" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Tax Registration No." />
+                                            </div>
+                                            <div>
+                                                <label htmlFor="Email" className="block text-sm font-medium text-gray-700">Email</label>
+                                                <input onChange={onChangeSender} type="text" name="Email" id="Email" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Email" />
+                                            </div>
+                                        </div>
+
+                                        <div className='mt-5'>
+                                            <div>
+                                                <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address 1</label>
+                                                <textarea onChange={onChangeSender} className='border focus:outline-none border-gray-300 rounded  py-1 px-3' name="address" id="address" cols="57" rows="1"></textarea>
+                                            </div>
+
+                                        </div>
+
+                                        <div className='mt-5'>
+                                            <div>
+                                                <label htmlFor="address2" className="block text-sm font-medium text-gray-700">Address 2</label>
+                                                <textarea onChange={onChangeSender} className='border border-gray-300 rounded focus:outline-none py-1 px-3 ' name="address2" id="address2" cols="57" rows="1"></textarea>
+                                            </div>
+
+                                        </div>
+
+
+                                        <div className='flex justify-between mt-5'>
+                                            <div>
+                                                <label htmlFor="Phone" className="block text-sm font-medium text-gray-700">Phone</label>
+                                                <input onChange={onChangeSender} type="text" name="Phone" id="Phone" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Phone" />
+                                            </div>
+                                            <div>
+                                                <label htmlFor="Website" className="block text-sm font-medium text-gray-700">Website</label>
+                                                <input onChange={onChangeSender} type="text" name="Website" id="Website" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Website" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                                <button onClick={updateSender} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-emerald-500 text-base font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:bg-emerald-500 sm:ml-3 sm:w-auto sm:text-sm">Submit</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* //CLient Modal */}
+
+            <div className={`relative z-10 ${!showClientModal && 'hidden'}`} aria-labelledby="modal-title" role="dialog" aria-modal="true">
+
+                <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+
+                <div className="fixed z-10 inset-0 overflow-y-auto">
+                    <div className="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+
+                        <div className="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                            <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                <div className="">
+                                    <div className='flex justify-between'>
+                                        <h3 className='font-semibold'>New Client</h3>
+                                        <i onClick={() => { setShowClientModal(false) }} className="fa fa-times text-gray-700 cursor-pointer" aria-hidden="true"></i>
+                                    </div>
+
+                                    <div className="">
+                                        <div className='flex justify-between mt-10'>
+                                            <div>
+                                                <label htmlFor="Cname" className="block text-sm font-medium text-gray-700">Comapny/Client Name</label>
+                                                <input onChange={onClientChange} type="text" name="Cname" id="Cname" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Company/Client Name" />
+                                            </div>
+                                            <div>
+                                                <label htmlFor="Ccountry" className="block text-sm font-medium text-gray-700">Country</label>
+                                                <select onChange={onClientChange} id="Ccountry" name="Ccountry" className="border-gray-300 focus:outline-none p-1 border h-3/4 bg-transparent text-gray-800 text-sm font-bold rounded">
+                                                    <option>United State</option>
+                                                    <option>China</option>
+                                                    <option>Pakistan</option>
+                                                    <option>Germany</option>
+                                                    <option>Australia</option>
+                                                    <option>Korea</option>
+                                                    <option>India</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className='flex justify-between mt-5'>
+                                            <div>
+                                                <label htmlFor="Cfname" className="block text-sm font-medium text-gray-700">Last Name</label>
+                                                <input onChange={onClientChange} type="text" name="Cfname" id="Cfname" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="First Name" />
+                                            </div>
+                                            <div>
+                                                <label htmlFor="Clname" className="block text-sm font-medium text-gray-700">Last Name</label>
+                                                <input onChange={onClientChange} type="text" name="Clname" id="Clname" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Last Name" />
+                                            </div>
+                                        </div>
+
+                                        <div className='flex justify-between mt-5'>
+                                            <div>
+                                                <label htmlFor="CEmail" className="block text-sm font-medium text-gray-700">Email</label>
+                                                <input onChange={onClientChange} type="text" name="CEmail" id="CEmail" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Email" />
+                                            </div>
+                                            <div>
+                                                <label htmlFor="CPhone" className="block text-sm font-medium text-gray-700">Phone</label>
+                                                <input onChange={onClientChange} type="text" name="CPhone" id="CPhone" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Phone" />
+                                            </div>
+                                        </div>
+
+                                        <div className='mt-5'>
+                                            <div>
+                                                <label htmlFor="Caddress" className="block text-sm font-medium text-gray-700">Address 1</label>
+                                                <textarea onChange={onClientChange} className='border focus:outline-none border-gray-300 rounded  py-1 px-3' name="Caddress" id="Caddress" cols="57" rows="1"></textarea>
+                                            </div>
+
+                                        </div>
+
+                                        <div className='mt-5'>
+                                            <div>
+                                                <label htmlFor="Caddress2" className="block text-sm font-medium text-gray-700">Address 2</label>
+                                                <textarea onChange={onClientChange} className='border border-gray-300 rounded focus:outline-none py-1 px-3 ' name="Caddress2" id="Caddress2" cols="57" rows="1"></textarea>
+                                            </div>
+
+                                        </div>
+
+
+                                        <div className='mt-5'>
+                                            <div className='flex flex-col'>
+                                                <label htmlFor="extra" className="block text-sm font-medium text-gray-700">Extra Data</label>
+                                                <input onChange={onClientChange} type="text" name="extra" id="extra" className="border focus:outline-none border-gray-300 rounded p-2 w-fill" placeholder="Extra Data" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                                <button onClick={updateRecipient} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-emerald-500 text-base font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:bg-emerald-500 sm:ml-3 sm:w-auto sm:text-sm">Submit</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </>
     )
