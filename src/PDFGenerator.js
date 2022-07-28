@@ -1,16 +1,17 @@
 import React from 'react'
 import jsPDF from 'jspdf'
 import downloader from './Images/download.png'
-
+// eslint-disable-next-line
+import autoTable from 'jspdf-autotable'
 
 const PDFGenerator = (props) => {
     const toPDF = () => {
         var pdf = new jsPDF('portrait', 'px', 'a4', 'false')
         //Header Section
-        pdf.addImage(props.imageURL, '*', 10, 10, 100, 100);
-        pdf.text(565, 20, props.invoice.invoiceNo).setFontSize(14)
-        pdf.text(520, 40, props.invoice.date).setFontSize(14)
-        pdf.text(520, 60, props.invoice.dueDate).setFontSize(14)
+        pdf.addImage(props.imageURL, 'png', 10, 10, 100, 100);
+        pdf.text(395, 20, props.invoice.invoiceNo).setFontSize(14)
+        pdf.text(350, 40, props.invoice.date).setFontSize(14)
+        pdf.text(350, 60, props.invoice.dueDate).setFontSize(14)
 
         //To And From Section
         pdf.text(40, 150, 'From').setFontSize(13)
@@ -29,15 +30,15 @@ const PDFGenerator = (props) => {
         pdf.text(40, 260, props.sender.tax).setFontSize(9)
 
 
-        pdf.text(400, 150, 'To').setFontSize(13)
-        pdf.text(400, 170, props.recipient.Cname).setFontSize(10)
-        pdf.text(400, 180, props.recipient.Cfname + '' + props.recipient.Clname).setFontSize(10)
-        pdf.text(400, 190, props.recipient.Caddress).setFontSize(9)
-        pdf.text(400, 200, props.recipient.Caddress2).setFontSize(9)
-        pdf.text(400, 210, props.recipient.Ccountry).setFontSize(9)
-        pdf.text(400, 220, props.recipient.extra).setFontSize(9)
+        pdf.text(300, 150, 'To').setFontSize(13)
+        pdf.text(300, 170, props.recipient.Cname).setFontSize(10)
+        pdf.text(300, 180, props.recipient.Cfname + '' + props.recipient.Clname).setFontSize(10)
+        pdf.text(300, 190, props.recipient.Caddress).setFontSize(9)
+        pdf.text(300, 200, props.recipient.Caddress2).setFontSize(9)
+        pdf.text(300, 210, props.recipient.Ccountry).setFontSize(9)
+        pdf.text(300, 220, props.recipient.extra).setFontSize(9)
 
-        pdf.text(400, 230, props.recipient.CEmail).setFontSize(9)
+        pdf.text(300, 230, props.recipient.CEmail).setFontSize(9)
 
         // //Table Data
         // pdf.line(40, 300, 450, 300)
@@ -85,11 +86,39 @@ const PDFGenerator = (props) => {
         pdf.autoTable({
             head: [['Item', 'HRS/QTY', 'Rate', 'TAX', 'Description', 'SUBTOTAL']],
             body: values,
-            startY: 360,
+            startY: 300,
             styles: { fillColor: "#a8a4a3" },
-            
+        })  
+        var index = 300;
+        for (let i = 0; i < newItems.length; i++) {
+            index += 70
+        }
+        if(index >= pdf.internal.pageSize.height){
+            pdf.addPage()
+            index =0
+        }
+        pdf.setFontSize(13)
+        pdf.text(40, index, 'Notes')
+        pdf.text(300, index, 'Invoice Summary')
+        pdf.setFontSize(9)
+        pdf.line(300, index + 5, 350, index)
+        index = index + 15;
+        pdf.text(40, index, 'Your Notes Here')
+        pdf.text(300, index, 'Subtotal')
+        console.log(props.subTotal)
+        pdf.text(340, index, props.subTotal.toString())
 
-        })
+        index = index + 15
+
+        pdf.text(300, index, 'Tax')
+        pdf.text(340, index, 'Tax Here')
+
+        index = index + 15
+
+        pdf.text(300, index, 'Total')
+        pdf.text(340, index, props.subTotal.toString())
+
+
 
 
         pdf.save('invoice' + Date.now() + '.pdf')

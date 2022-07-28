@@ -6,7 +6,7 @@ import PDFGenerator from './PDFGenerator';
 
 const Home = () => {
     //Invoice Related
-    const [invoice, setInvoice] = useState({ invoiceNo: '', date: '', dueDate: '', currency: '' })
+    const [invoice, setInvoice] = useState({ invoiceNo: '', date: '', dueDate: '', currency: 'USD' })
 
     const invoiceOnChange = (e) => {
         setInvoice({ ...invoice, [e.target.name]: e.target.value })
@@ -28,9 +28,9 @@ const Home = () => {
 
     const handleImage = (e) => {
         const images = e.target.files[0];
-        console.log(images)
+        
         const urlImage = URL.createObjectURL(images);
-        console.log(urlImage)
+        
         setImageURL(urlImage);
         setImageLoaded(true);
     }
@@ -43,7 +43,7 @@ const Home = () => {
             setSubTotal(subTotal + item.item_qty * item.item_rate)
             setItem({ id: Math.random().toString(), item_name: '', item_qty: '', item_rate: '', item_tax: '', item_total: '0.00', item_desc: '' })
             setAddMore(false);
-            alert(item.id)
+            
         }
         else {
             alert('Warning\n\nPlease enter all the data of item')
@@ -157,7 +157,7 @@ const Home = () => {
                             <div className='flex flex-row items-center justify-end gap-2'>
                                 <label htmlFor="currency">Currency: </label>
                                 <select onChange={invoiceOnChange} id="currency" name="currency" className="border-gray-300 p-1 border h-full pl-2 pr-7 bg-transparent text-gray-800 text-sm font-bold rounded">
-                                    <option>USD</option>
+                                    <option selected>USD</option>
                                     <option>CAD</option>
                                     <option>EUR</option>
                                     <option>GBP</option>
@@ -334,7 +334,7 @@ const Home = () => {
 
                             <hr />
                             <div className='flex 2xl:gap-56 xl:gap-36 lg:gap-24 md:gap-16 sm:gap-12 my-3 font-bold text-gray-800 2xl:text-lg lg:text-lg md:text-lg text-sm'>
-                                <span>Total(USD)</span>
+                                <span>Total({invoice.currency})</span>
                                 <span>{subTotal}</span>
                             </div>
                         </div>
@@ -342,7 +342,7 @@ const Home = () => {
                 </div>
 
                 <div className='flex justify-end gap-7 my-5'>
-                    <PDFGenerator items={items} sender={sender} recipient={recipient} invoice={invoice} imageURL={imageURL} />
+                    <PDFGenerator items={items} sender={sender} recipient={recipient} invoice={invoice} imageURL={imageURL} subTotal={subTotal} />
                 </div>
             </div>
 
