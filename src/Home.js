@@ -1,17 +1,23 @@
 import React, { useRef, useState } from 'react'
 import uploader from './Images/uploader.png'
-import downloader from './Images/download.png'
 import Item from './Item'
+
+import PDFGenerator from './PDFGenerator';
+
 const Home = () => {
+    //Invoice Related
+    const [invoice, setInvoice] = useState({ invoiceNo: '', date: '', dueDate: '', currency: '' })
+
+    const invoiceOnChange = (e) => {
+        setInvoice({ ...invoice, [e.target.name]: e.target.value })
+    }
+
+    const [subTotal, setSubTotal] = useState(0);
     const [addMore, setAddMore] = useState(true)
     const [item, setItem] = useState({ id: Math.random().toString(), item_name: '', item_qty: '', item_rate: '', item_tax: '', item_desc: '' })
     const [items, setItems] = useState([]);
     const [imageURL, setImageURL] = useState('')
     const [imageLoaded, setImageLoaded] = useState(false)
-
-    //Modal Related
-    const [showModal, setShowModal] = useState(false)
-    const [showClientModal, setShowClientModal] = useState(false)
 
     //Image Related 
     const inpRef = useRef();
@@ -34,6 +40,7 @@ const Home = () => {
     const addItems = () => {
         if (item.item_name !== '' || item.item_qty !== '' || item.item_rate !== '' || item.item_tax !== '' || item.item_desc !== '') {
             setItems(items.concat(item))
+            setSubTotal(subTotal + item.item_qty * item.item_rate)
             setItem({ id: Math.random().toString(), item_name: '', item_qty: '', item_rate: '', item_tax: '', item_total: '0.00', item_desc: '' })
             setAddMore(false);
             alert(item.id)
@@ -56,6 +63,10 @@ const Home = () => {
         })
         setItems(newList);
     }
+
+    //Modal Related
+    const [showModal, setShowModal] = useState(false)
+    const [showClientModal, setShowClientModal] = useState(false)
 
 
     //Sender Data
@@ -95,6 +106,8 @@ const Home = () => {
     }
 
 
+
+
     return (
         <>
             <div className="header bg-emerald-600 h-12 flex items-center">
@@ -125,25 +138,25 @@ const Home = () => {
                         <div className="right flex flex-col gap-1 s:my-4 s:items-center ">
 
                             <div className='flex items-center justify-end gap-2'>
-                                <label htmlFor="invoice">Invoice #:</label>
-                                <input type="text" name="invoiceNo" id="invoiceNo" placeholder='0001' className='mt-1 placeholder:text-gray-500 placeholder:font-semibold border border-gray-300 rounded p-1 w-20' />
+                                <label htmlFor="invoiceNo">Invoice #:</label>
+                                <input onChange={invoiceOnChange} type="text" name="invoiceNo" id="invoiceNo" placeholder='0001' className='mt-1 placeholder:text-gray-500 placeholder:font-semibold border border-gray-300 rounded p-1 w-20' />
                             </div>
 
                             <div className='flex flex-row items-center justify-end gap-2'>
                                 <div className='flex justify-end'>
                                     <label htmlFor="date">Date: </label>
                                 </div>
-                                <input type="date" name="date" id="date" placeholder='0001' className='mt-1 border border-gray-300 rounded p-1 w-fit' />
+                                <input onChange={invoiceOnChange} type="date" name="date" id="date" placeholder='0001' className='mt-1 border border-gray-300 rounded p-1 w-fit' />
                             </div>
 
                             <div className='flex flex-row items-center justify-end gap-2'>
                                 <label htmlFor="dueDate">Due Date: </label>
-                                <input type="date" name="dueDate" id="dueDate" placeholder='0001' className='mt-1 border border-gray-300 rounded p-1 w-fit' />
+                                <input onChange={invoiceOnChange} type="date" name="dueDate" id="dueDate" placeholder='0001' className='mt-1 border border-gray-300 rounded p-1 w-fit' />
                             </div>
 
                             <div className='flex flex-row items-center justify-end gap-2'>
                                 <label htmlFor="currency">Currency: </label>
-                                <select id="currency" name="currency" className="border-gray-300 p-1 border h-full pl-2 pr-7 bg-transparent text-gray-800 text-sm font-bold rounded">
+                                <select onChange={invoiceOnChange} id="currency" name="currency" className="border-gray-300 p-1 border h-full pl-2 pr-7 bg-transparent text-gray-800 text-sm font-bold rounded">
                                     <option>USD</option>
                                     <option>CAD</option>
                                     <option>EUR</option>
@@ -214,14 +227,59 @@ const Home = () => {
                         </div>
                     </div>
 
+                    <div className='flex justify-between'>
+                        <div className='flex-1'>
+                            <span className='text-gray-700 font-semibold'>ITEM</span>
+                        </div>
+                        <div className='text-gray-700 font-semibold flex-1 flex justify-evenly w-full 2xl:text-lg xl:text-lg lg:text-lg md:text-lg text-xs'>
+                            <span>HRS/QTY</span>
+                            <span>RATE</span>
+                            <span>TAX</span>
+                            <span>SUBTOTAL</span>
+                        </div>
+                    </div>
+
+                    <hr />
+                    {items.map((item) => {
+                        return <Item deleteItem={deleteItem} key={item.name} item={item} />
+                    })}
+
+                    {addMore && <>
+                        <div className='flex justify-between'>
+                            <div className='flex-1'>
+                                <input value={item.item_name} onChange={itemOnChange} type="text" name="item_name" id="item_name" placeholder='Item Name' className='mt-1 border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm w-24' />
+                            </div>
+                            <div className='text-gray-700 font-semibold flex-1 flex justify-evenly w-full pr-6'>
+                                <input value={item.item_qty} onChange={itemOnChange} type="text" name="item_qty" id="item_qty" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm  w-12   ' />
+                                <input value={item.item_rate} onChange={itemOnChange} type="text" name="item_rate" id="item_rate" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm   w-12  ' />
+                                <input value={item.item_tax} onChange={itemOnChange} type="text" name="item_tax" id="item_tax" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm  w-12  ' />
+                                <div className='text-right flex items-center'>
+                                    <span>{item.item_qty * item.item_rate}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='flex justify-between items-center pr-7'>
+                            <input onChange={itemOnChange} type="text" name="item_desc" id="item_desc" placeholder='Description' className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-96' />
+                            <i onClick={addItems} className="fa fa-check-circle text-emerald-500 cursor-pointer" aria-hidden="true"></i>
+                        </div>
+                    </>
+                    }
+
+                    
+                    {/* <hr />
+                    <hr />
+                    <hr />
+                    <hr />
+                    <hr />
+                    <hr />
                     <hr />
 
-                    <div className='flex justify-between py-2 text-gray-700 font-semibold'>
-                        <div>
+                    <div className='flex justify-between flex-1 py-2 text-gray-700 font-semibold'>
+                        <div className='2xl:flex-1 xl:flex-1 md:flex-1 flex-0.5 flex'>
                             <span>ITEM</span>
                         </div>
 
-                        <div className='flex justify-between 2xl:gap-20 xl:gap-20 lg:gap-24 md:gap-16 sm:gap-8 s:gap-7 pr-7'>
+                        <div className='flex flex-1 justify-end 2xl:gap-32 xl:gap-32 lg:gap-20 md:gap-12 gap-2 '>
                             <span>HRS/QTY</span>
                             <span>RATE</span>
                             <span>TAX</span>
@@ -233,25 +291,25 @@ const Home = () => {
 
                     {items.map((item) => {
                         return <Item deleteItem={deleteItem} key={item.name} item={item} />
-                    })}
+                    })} */}
 
-                    {addMore && <><div className='flex justify-between py-2 text-gray-700 font-semibold'>
-                        <div>
-                            <input value={item.item_name} onChange={itemOnChange} type="text" name="item_name" id="item_name" placeholder='Item Name' className='mt-1 border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm w-full ' />
+                    {/* {addMore && <><div className='flex justify-between py-2 text-gray-700 font-semibold'>
+                        <div className='2xl:flex-1 xl:flex-1 md:flex-1 flex-0.5 flex'>
+                            <input value={item.item_name} onChange={itemOnChange} type="text" name="item_name" id="item_name" placeholder='Item Name' className='mt-1 border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm w-fill md:w-56 sm:w-20 ' />
                         </div>
 
-                        <div className='flex justify-between xl:gap-12 md:gap-14 sm:gap-10 s:gap-11 2xl:pr-0 md:pr-7 sm:pr-10 s:pr-4 pr-16'>
-                            <span></span>
-                            <input value={item.item_qty} onChange={itemOnChange} type="text" name="item_qty" id="item_qty" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-20 md:w-20 sm:w-12 s:w-12 w-20    ' />
-                            <input value={item.item_rate} onChange={itemOnChange} type="text" name="item_rate" id="item_rate" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-20 md:w-20 sm:w-12 s:w-12 w-20    ' />
-                            <input value={item.item_tax} onChange={itemOnChange} type="text" name="item_tax" id="item_tax" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-20 md:w-20 sm:w-12 s:w-12 w-20    ' />
+                        <div className='flex 2xl:gap-32 xl:gap-20 lg:gap-12 md:gap-12 2xl:flex-1 xl:flex-1 lg:flex-1 flex-0 md:pr-7'>
+
+                            <input value={item.item_qty} onChange={itemOnChange} type="text" name="item_qty" id="item_qty" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-20 md:w-14 sm:w-20 w-20    ' />
+                            <input value={item.item_rate} onChange={itemOnChange} type="text" name="item_rate" id="item_rate" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-20 md:w-14 sm:w-12 s:w-12 w-20    ' />
+                            <input value={item.item_tax} onChange={itemOnChange} type="text" name="item_tax" id="item_tax" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-20 md:w-14 sm:w-12 s:w-12 w-20    ' />
                             <span className='lg:w-20'>{item.item_qty * item.item_rate}</span>
                         </div>
                     </div>
                         <div className='flex justify-between items-center pr-12'>
                             <input onChange={itemOnChange} type="text" name="item_desc" id="item_desc" placeholder='Description' className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-96' />
                             <i onClick={addItems} className="fa fa-check-circle text-emerald-500 cursor-pointer" aria-hidden="true"></i>
-                        </div></>}
+                        </div></>} */}
 
                     <hr className='mt-6' />
 
@@ -267,7 +325,7 @@ const Home = () => {
                         <div className='right text-base p-5 w-fill'>
                             <div className='flex 2xl:gap-56 xl:gap-36 lg:gap-24 md:gap-16 sm:gap-12 gap-7 my-3'>
                                 <span>Subtotal</span>
-                                <span>0.00</span>
+                                <span>{subTotal}</span>
                             </div>
                             <div className='flex 2xl:gap-56 xl:gap-36 lg:gap-24 md:gap-16 sm:gap-12 my-3'>
                                 <span>Tax</span>
@@ -277,15 +335,14 @@ const Home = () => {
                             <hr />
                             <div className='flex 2xl:gap-56 xl:gap-36 lg:gap-24 md:gap-16 sm:gap-12 my-3 font-bold text-gray-800 2xl:text-lg lg:text-lg md:text-lg text-sm'>
                                 <span>Total(USD)</span>
-                                <span>0.00</span>
+                                <span>{subTotal}</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div className='flex justify-end gap-7 my-5'>
-                    <button className='border border-emerald-500 rounded-lg  py-2 px-7 font-semibold'>Reset</button>
-                    <button className='border flex items-center gap-2 bg-emerald-500 rounded-lg text-white py-2 px-10 font-semibold'> <img src={downloader} alt="" /> Download</button>
+                    <PDFGenerator items={items} sender={sender} recipient={recipient} invoice={invoice} imageURL={imageURL} />
                 </div>
             </div>
 
@@ -351,7 +408,7 @@ const Home = () => {
                                         <div className='mt-5'>
                                             <div className='flex flex-col'>
                                                 <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address 1</label>
-                                                <textarea onChange={onChangeSender} className='border focus:outline-none border-gray-300 rounded py-1 px-3' name="address" id="address"  rows="1"></textarea>
+                                                <textarea onChange={onChangeSender} className='border focus:outline-none border-gray-300 rounded py-1 px-3' name="address" id="address" rows="1"></textarea>
                                             </div>
 
                                         </div>
@@ -424,11 +481,11 @@ const Home = () => {
                                             </div>
                                         </div>
                                         <div className='flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col sm:items-start justify-between mt-5'>
-                                            <div  className='flex flex-col'>
+                                            <div className='flex flex-col'>
                                                 <label htmlFor="Cfname" className="block text-sm font-medium text-gray-700">First Name</label>
                                                 <input onChange={onClientChange} type="text" name="Cfname" id="Cfname" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="First Name" />
                                             </div>
-                                            <div  className='flex flex-col'>
+                                            <div className='flex flex-col'>
                                                 <label htmlFor="Clname" className="block text-sm font-medium text-gray-700">Last Name</label>
                                                 <input onChange={onClientChange} type="text" name="Clname" id="Clname" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Last Name" />
                                             </div>
@@ -456,7 +513,7 @@ const Home = () => {
                                         <div className='mt-5'>
                                             <div className='flex flex-col'>
                                                 <label htmlFor="Caddress2" className="block text-sm font-medium text-gray-700">Address 2</label>
-                                                <textarea onChange={onClientChange} className='border border-gray-300 rounded focus:outline-none py-1 px-3' name="Caddress2" id="Caddress2"rows="1"></textarea>
+                                                <textarea onChange={onClientChange} className='border border-gray-300 rounded focus:outline-none py-1 px-3' name="Caddress2" id="Caddress2" rows="1"></textarea>
                                             </div>
 
                                         </div>
