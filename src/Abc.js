@@ -2,8 +2,10 @@ import React, { useState } from 'react'
 
 const Abc = () => {
     const [first, setFirst] = useState('hello')
+    const [subTotal, setSubTotal] = useState();
     const onChangeSender = (e)=>{
-        setFirst(e.target.value)
+        setSubTotal(6);
+        console.log(subTotal)
         
     }
 
@@ -18,7 +20,7 @@ const Abc = () => {
             <option>Korea</option>
             <option>India</option>
         </select>
-        {first}
+        {subTotal}
        </>
     )
 }

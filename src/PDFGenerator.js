@@ -1,127 +1,132 @@
 import React from 'react'
-import jsPDF from 'jspdf'
+import jsPDF, { AcroFormPasswordField } from 'jspdf'
 import downloader from './Images/download.png'
 // eslint-disable-next-line
 import autoTable from 'jspdf-autotable'
 
 const PDFGenerator = (props) => {
     const toPDF = () => {
-        var pdf = new jsPDF('portrait', 'px', 'a4', 'false')
-        //Header Section
-        pdf.addImage(props.imageURL, 'png', 10, 10, 100, 100);
-        pdf.text(395, 20, props.invoice.invoiceNo).setFontSize(14)
-        pdf.text(350, 40, props.invoice.date).setFontSize(14)
-        pdf.text(350, 60, props.invoice.dueDate).setFontSize(14)
-
-        //To And From Section
-        pdf.text(40, 150, 'From').setFontSize(13)
-
-        pdf.text(40, 170, props.sender.name).setFontSize(10)
-        pdf.text(40, 180, props.sender.fname + '' + props.sender.lname).setFontSize(9)
-        pdf.text(40, 190, props.sender.address).setFontSize(9)
-        pdf.text(40, 200, props.sender.address2).setFontSize(9)
-        pdf.text(40, 210, props.sender.country).setFontSize(9)
-
-        pdf.text(40, 220, props.sender.Email).setFontSize(9)
-        pdf.text(40, 230, props.sender.Phone).setFontSize(9)
-        pdf.text(40, 240, props.sender.Website).setFontSize(9)
-
-        pdf.text(40, 250, 'Tax Registration Number').setFontSize(9)
-        pdf.text(40, 260, props.sender.tax).setFontSize(9)
-
-
-        pdf.text(300, 150, 'To').setFontSize(13)
-        pdf.text(300, 170, props.recipient.Cname).setFontSize(10)
-        pdf.text(300, 180, props.recipient.Cfname + '' + props.recipient.Clname).setFontSize(10)
-        pdf.text(300, 190, props.recipient.Caddress).setFontSize(9)
-        pdf.text(300, 200, props.recipient.Caddress2).setFontSize(9)
-        pdf.text(300, 210, props.recipient.Ccountry).setFontSize(9)
-        pdf.text(300, 220, props.recipient.extra).setFontSize(9)
-
-        pdf.text(300, 230, props.recipient.CEmail).setFontSize(9)
-
-        // //Table Data
-        // pdf.line(40, 300, 450, 300)
-
-        // pdf.text(40, 310, 'ITEM').setFontSize(13)
-        // pdf.text(240, 310, 'HRS/QTY').setFontSize(13)
-        // pdf.text(300, 310, 'RATE').setFontSize(13)
-        // pdf.text(360, 310, 'TAX').setFontSize(13)
-        // pdf.text(420, 310, 'SUBTOTAL').setFontSize(13)
-        // // var total = props.items.item_qty * props.items.item_rate;
-        // // var index = 330
-        // pdf.line(40, 310, 450, 310)
-        // const newItems = props.items.slice();
-        // setList(newItems)
-        // for (let index = 0; index < newItems; index++) {
-        //     const element = newItems[index];
-        //     newItems[index].item_total = parseInt(element.item_qty) * parseInt(element.item_rate);
-        // }
-        // console.log("newItem" + list)
-        const newArray = props.items.map(({id, item_total, ...rest}) => {
-            return rest;
-          });
-          console.log(newArray)
-
-        const newItems = newArray.slice();
-        for (let index = 0; index < newItems.length; index++) {
-            const element = newItems[index];
-            newItems[index].item_total = parseInt(element.item_qty) * parseInt(element.item_rate);
+        if (props.imageURL === '') {
+            alert('Please Select Image')
+        }
+        else if (props.items.length === 0) {
+            alert('Add Atleast one Item')
+        }
+        else if (props.sender.name === '' ||props.sender.fname === '' || props.sender.lname === '' ) {
+            alert('Please Enter Sender Details')
+        } else if (props.recipient.Cname === '' || props.recipient.fname === '' || props.recipient.lname === '') {
+            alert('Please Enter Recipient Details')
+        }else if(props.invoice.invoiceNo === '' || props.invoice.date === '' || props.invoice.dueDate === ''){
+            alert('Please Enter Invoice Details')
             
+        } else {
+            var pdf = new jsPDF('portrait', 'px', 'a4', 'false')
+            console.log(props.sender.length)
+            //Header Section
+            pdf.addImage(props.imageURL, 'png', 10, 10, 100, 100);
+            pdf.addFont('Times-Roman', 'Arial', 'normal');
+            pdf.setFont('Times-Roman');
+            pdf.setFontSize(12)
+            pdf.text(340, 150, 'INVOICE #')
+            pdf.addFont('Times-Bold', 'bolder')
+            pdf.setFont('Times-Bold')
+            pdf.setFontSize(10)
+            pdf.text(380, 165, props.invoice.invoiceNo)
+            pdf.setFont('Times-Roman');
+            pdf.setFontSize(12)
+            pdf.text(340, 180, 'Invoice Date')
+            pdf.setFont('Times-Bold')
+            pdf.setFontSize(10)
+            pdf.text(350, 195, props.invoice.date)
+            pdf.setFont('Times-Roman');
+            pdf.setFontSize(12)
+            pdf.text(350, 210, 'Due Date')
+            pdf.setFont('Times-Bold')
+            pdf.setFontSize(10)
+            pdf.text(350, 225, props.invoice.dueDate)
+
+            //To And From Section
+            pdf.setFontSize(13)
+            pdf.text(40, 150, 'From').setFontSize(13)
+
+            pdf.text(40, 170, props.sender.name).setFontSize(10)
+            pdf.text(40, 180, props.sender.fname + '' + props.sender.lname)
+            pdf.text(40, 190, props.sender.address)
+            pdf.text(40, 200, props.sender.address2)
+            pdf.text(40, 210, props.sender.country)
+
+            pdf.text(40, 220, props.sender.Email)
+            pdf.text(40, 230, props.sender.Phone)
+            pdf.text(40, 240, props.sender.Website)
+
+            pdf.text(40, 250, 'Tax Registration Number')
+            pdf.text(40, 260, props.sender.tax)
+
+            pdf.setFontSize(13)
+            pdf.text(200, 150, 'To')
+            pdf.text(200, 170, props.recipient.Cname).setFontSize(10)
+            pdf.text(200, 180, props.recipient.Cfname + '' + props.recipient.Clname).setFontSize(10)
+            pdf.text(200, 190, props.recipient.Caddress)
+            pdf.text(200, 200, props.recipient.Caddress2)
+            pdf.text(200, 210, props.recipient.Ccountry)
+            pdf.text(200, 220, props.recipient.extra)
+
+            pdf.text(200, 230, props.recipient.CEmail)
+
+            const newArray = props.items.map(({ id, item_total, ...rest }) => {
+                return rest;
+            });
+
+            const newItems = newArray.slice();
+            for (let index = 0; index < newItems.length; index++) {
+                const element = newItems[index];
+                newItems[index].item_total = parseInt(element.item_qty) * parseInt(element.item_rate);
+
+            }
+
+            const values = newItems.map((e) => Object.values(e))
+
+            pdf.autoTable({
+                head: [['Item', 'HRS/QTY', 'Rate', 'TAX', 'Description', 'SUBTOTAL']],
+                body: values,
+                startY: 300,
+                styles: { fillColor: "#a8a4a3" },
+            })
+            var index = 300;
+            for (let i = 0; i < newItems.length; i++) {
+                index += 70
+            }
+            if (index >= pdf.internal.pageSize.height) {
+                pdf.addPage()
+                index = 0
+            }
+            pdf.setFontSize(13)
+            pdf.text(40, index, 'Notes')
+            pdf.text(300, index, 'Invoice Summary')
+            pdf.setFontSize(9)
+            pdf.line(300, index + 5, 350, index)
+            index = index + 15;
+            pdf.text(40, index, props.notes.notes)
+            pdf.text(300, index, `Subtotal (${props.invoice.currency})`)
+            pdf.text(360, index, props.subTotal.toString() + ' ' + props.invoice.currency)
+
+            index = index + 15
+
+            pdf.text(300, index, `Tax (${props.invoice.currency})`)
+            pdf.text(360, index, props.totalTax.toString() + ' ' + props.invoice.currency)
+
+            index = index + 15
+
+            pdf.text(300, index, `Total (${props.invoice.currency})`)
+            pdf.text(360, index, props.total.toString() + ' ' + props.invoice.currency)
+
+
+
+
+            pdf.save('invoice' + Date.now() + '.pdf')
         }
-        // console.log(newItems)
-
-        
-        // props.items.forEach((item) => {
-        //     pdf.text(40, index, item.item_name).setFontSize(9)
-        //     pdf.text(260, index, item.item_qty).setFontSize(9)
-        //     pdf.text(320, index, item.item_rate).setFontSize(9)
-        //     pdf.text(380, index, item.item_tax).setFontSize(9)
-        //     pdf.text(440, index, total.toString()).setFontSize(9)
-        //     pdf.text(40, (index + 20), item.item_desc).setFontSize(12)
-        //     index = index + 40
-        // })
-        const values = newItems.map((e)=>Object.values(e))
-
-        pdf.autoTable({
-            head: [['Item', 'HRS/QTY', 'Rate', 'TAX', 'Description', 'SUBTOTAL']],
-            body: values,
-            startY: 300,
-            styles: { fillColor: "#a8a4a3" },
-        })  
-        var index = 300;
-        for (let i = 0; i < newItems.length; i++) {
-            index += 70
-        }
-        if(index >= pdf.internal.pageSize.height){
-            pdf.addPage()
-            index =0
-        }
-        pdf.setFontSize(13)
-        pdf.text(40, index, 'Notes')
-        pdf.text(300, index, 'Invoice Summary')
-        pdf.setFontSize(9)
-        pdf.line(300, index + 5, 350, index)
-        index = index + 15;
-        pdf.text(40, index, 'Your Notes Here')
-        pdf.text(300, index, 'Subtotal')
-        console.log(props.subTotal)
-        pdf.text(340, index, props.subTotal.toString())
-
-        index = index + 15
-
-        pdf.text(300, index, 'Tax')
-        pdf.text(340, index, 'Tax Here')
-
-        index = index + 15
-
-        pdf.text(300, index, 'Total')
-        pdf.text(340, index, props.subTotal.toString())
 
 
-
-
-        pdf.save('invoice' + Date.now() + '.pdf')
     }
     return (
         <>

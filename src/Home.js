@@ -5,7 +5,12 @@ import Item from './Item'
 import PDFGenerator from './PDFGenerator';
 
 const Home = () => {
+    const [notes, setNotes] = useState({ notes: '' })
+    const onNotesChange = (e) => {
+        setNotes({ ...notes, [e.target.name]: e.target.value })
+    }
     //Invoice Related
+    const [totalTax, setTotalTax] = useState(0)
     const [invoice, setInvoice] = useState({ invoiceNo: '', date: '', dueDate: '', currency: 'USD' })
 
     const invoiceOnChange = (e) => {
@@ -13,6 +18,7 @@ const Home = () => {
     }
 
     const [subTotal, setSubTotal] = useState(0);
+    const [total, setTotal] = useState(0)
     const [addMore, setAddMore] = useState(true)
     const [item, setItem] = useState({ id: Math.random().toString(), item_name: '', item_qty: '', item_rate: '', item_tax: '', item_desc: '' })
     const [items, setItems] = useState([]);
@@ -28,9 +34,9 @@ const Home = () => {
 
     const handleImage = (e) => {
         const images = e.target.files[0];
-        
+
         const urlImage = URL.createObjectURL(images);
-        
+
         setImageURL(urlImage);
         setImageLoaded(true);
     }
@@ -40,10 +46,22 @@ const Home = () => {
     const addItems = () => {
         if (item.item_name !== '' || item.item_qty !== '' || item.item_rate !== '' || item.item_tax !== '' || item.item_desc !== '') {
             setItems(items.concat(item))
-            setSubTotal(subTotal + item.item_qty * item.item_rate)
+            setSubTotal(subTotal + (item.item_qty * item.item_rate))
+            var sub = subTotal + (item.item_qty * item.item_rate)
+            var tax = parseInt(item.item_tax);
+            var item_total = item.item_qty * item.item_rate
+            tax = tax / 100;
+            tax = tax * item_total
+            tax = Math.round((tax + Number.EPSILON) * 100) / 100
+
+            setTotalTax(totalTax + tax)
+            var T_tax = totalTax + tax;
+
+            setTotal(sub + T_tax)
+
             setItem({ id: Math.random().toString(), item_name: '', item_qty: '', item_rate: '', item_tax: '', item_total: '0.00', item_desc: '' })
             setAddMore(false);
-            
+
         }
         else {
             alert('Warning\n\nPlease enter all the data of item')
@@ -57,6 +75,22 @@ const Home = () => {
 
     //Deleting an Item
     const deleteItem = (id) => {
+
+        for (let index = 0; index < items.length; index++) {
+            const element = items[index];
+            if (element.id === id) {
+                var tax = element.item_tax / 100;
+                tax = tax * element.item_qty * element.item_rate
+                const totalamm = element.item_qty * element.item_rate
+                console.log(tax)
+                setTotal(total - tax - totalamm);
+
+                setSubTotal(subTotal - totalamm)
+                setTotalTax(totalTax - tax)
+            }
+        }
+
+
         const newList = items.filter((item) => {
 
             return item.id !== id;
@@ -104,8 +138,6 @@ const Home = () => {
             alert('Warning\n\nPlease enter all the data of item')
         }
     }
-
-
 
 
     return (
@@ -227,89 +259,49 @@ const Home = () => {
                         </div>
                     </div>
 
-                    <div className='flex justify-between'>
-                        <div className='flex-1'>
-                            <span className='text-gray-700 font-semibold'>ITEM</span>
-                        </div>
-                        <div className='text-gray-700 font-semibold flex-1 flex justify-evenly w-full 2xl:text-lg xl:text-lg lg:text-lg md:text-lg text-xs'>
-                            <span>HRS/QTY</span>
-                            <span>RATE</span>
-                            <span>TAX</span>
-                            <span>SUBTOTAL</span>
-                        </div>
-                    </div>
-
-                    <hr />
-                    {items.map((item) => {
-                        return <Item deleteItem={deleteItem} key={item.name} item={item} />
-                    })}
-
-                    {addMore && <>
-                        <div className='flex justify-between'>
-                            <div className='flex-1'>
-                                <input value={item.item_name} onChange={itemOnChange} type="text" name="item_name" id="item_name" placeholder='Item Name' className='mt-1 border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm w-24' />
+                    <div className='flex 2xl:flex-col xl:flex-col lg:flex-col md:flex-col sm:flex-row justify-between items-normal'>
+                        <div className='flex justify-between 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col s:gap-12'>
+                            <div className='2xl:flex-1 xl:flex-1 lg:flex-1 md:flex-1 flex-0'>
+                                <span className='text-gray-700 font-semibold'>ITEM</span>
                             </div>
-                            <div className='text-gray-700 font-semibold flex-1 flex justify-evenly w-full pr-6'>
-                                <input value={item.item_qty} onChange={itemOnChange} type="text" name="item_qty" id="item_qty" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm  w-12   ' />
-                                <input value={item.item_rate} onChange={itemOnChange} type="text" name="item_rate" id="item_rate" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm   w-12  ' />
-                                <input value={item.item_tax} onChange={itemOnChange} type="text" name="item_tax" id="item_tax" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm  w-12  ' />
-                                <div className='text-right flex items-center'>
-                                    <span>{item.item_qty * item.item_rate}</span>
+                            <div className='text-gray-700 font-semibold flex-1 flex justify-evenly w-full  2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col s:gap-12'>
+                                <span>HRS/QTY</span>
+                                <span>RATE</span>
+                                <span>TAX</span>
+                                <span>SUBTOTAL</span>
+                            </div>
+                        </div>
+
+                        <hr />
+                        {items.map((item) => {
+                            return <Item deleteItem={deleteItem} key={item.id} item={item} />
+                        })}
+
+                        {addMore && <>
+                            <div className='flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col justify-between s:gap-8'>
+                                <div className='flex-1'>
+                                    <input value={item.item_name} onChange={itemOnChange} type="text" name="item_name" id="item_name" placeholder='Item Name' className='mt-1 border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm w-32 ' />
+                                </div>
+                                <div className='text-gray-700 font-semibold flex-1 flex justify-evenly items-end w-full pr-6 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col s:gap-10'>
+                                    <input value={item.item_qty} onChange={itemOnChange} type="text" name="item_qty" id="item_qty" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm  2xl:w-12 xl:w-12 lg:w-12 md:w-12 w-20   ' />
+                                    <input value={item.item_rate} onChange={itemOnChange} type="text" name="item_rate" id="item_rate" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm   2xl:w-12 xl:w-12 lg:w-12 md:w-12 w-20  ' />
+                                    <input value={item.item_tax} onChange={itemOnChange} type="text" name="item_tax" id="item_tax" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm  2xl:w-12 xl:w-12 lg:w-12 md:w-12 w-20  ' />
+                                    <div className='text-right flex items-center'>
+                                        <span>{(item.item_qty * item.item_rate)}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className='flex justify-between items-center pr-7'>
-                            <input onChange={itemOnChange} type="text" name="item_desc" id="item_desc" placeholder='Description' className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-96' />
-                            <i onClick={addItems} className="fa fa-check-circle text-emerald-500 cursor-pointer" aria-hidden="true"></i>
-                        </div>
-                    </>
-                    }
-
-                    
-                    {/* <hr />
-                    <hr />
-                    <hr />
-                    <hr />
-                    <hr />
-                    <hr />
-                    <hr />
-
-                    <div className='flex justify-between flex-1 py-2 text-gray-700 font-semibold'>
-                        <div className='2xl:flex-1 xl:flex-1 md:flex-1 flex-0.5 flex'>
-                            <span>ITEM</span>
-                        </div>
-
-                        <div className='flex flex-1 justify-end 2xl:gap-32 xl:gap-32 lg:gap-20 md:gap-12 gap-2 '>
-                            <span>HRS/QTY</span>
-                            <span>RATE</span>
-                            <span>TAX</span>
-                            <span>SUBTOTAL</span>
-                        </div>
+                            {/* <div className='flex justify-between items-center pr-7'>
+                                <input onChange={itemOnChange} type="text" name="item_desc" id="item_desc" placeholder='Description' className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-96' />
+                                <i onClick={addItems} className="fa fa-check-circle text-emerald-500 cursor-pointer" aria-hidden="true"></i>
+                            </div> */}
+                        </>
+                        }
                     </div>
-
-                    <hr />
-
-                    {items.map((item) => {
-                        return <Item deleteItem={deleteItem} key={item.name} item={item} />
-                    })} */}
-
-                    {/* {addMore && <><div className='flex justify-between py-2 text-gray-700 font-semibold'>
-                        <div className='2xl:flex-1 xl:flex-1 md:flex-1 flex-0.5 flex'>
-                            <input value={item.item_name} onChange={itemOnChange} type="text" name="item_name" id="item_name" placeholder='Item Name' className='mt-1 border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm w-fill md:w-56 sm:w-20 ' />
-                        </div>
-
-                        <div className='flex 2xl:gap-32 xl:gap-20 lg:gap-12 md:gap-12 2xl:flex-1 xl:flex-1 lg:flex-1 flex-0 md:pr-7'>
-
-                            <input value={item.item_qty} onChange={itemOnChange} type="text" name="item_qty" id="item_qty" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-20 md:w-14 sm:w-20 w-20    ' />
-                            <input value={item.item_rate} onChange={itemOnChange} type="text" name="item_rate" id="item_rate" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-20 md:w-14 sm:w-12 s:w-12 w-20    ' />
-                            <input value={item.item_tax} onChange={itemOnChange} type="text" name="item_tax" id="item_tax" className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-20 md:w-14 sm:w-12 s:w-12 w-20    ' />
-                            <span className='lg:w-20'>{item.item_qty * item.item_rate}</span>
-                        </div>
-                    </div>
-                        <div className='flex justify-between items-center pr-12'>
-                            <input onChange={itemOnChange} type="text" name="item_desc" id="item_desc" placeholder='Description' className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-96' />
-                            <i onClick={addItems} className="fa fa-check-circle text-emerald-500 cursor-pointer" aria-hidden="true"></i>
-                        </div></>} */}
+                   {addMore &&  <div className='flex justify-between items-center pr-7'>
+                        <input onChange={itemOnChange} type="text" name="item_desc" id="item_desc" placeholder='Description' className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-96' />
+                        <i onClick={addItems} className="fa fa-check-circle text-emerald-500 cursor-pointer" aria-hidden="true"></i>
+                    </div>}
 
                     <hr className='mt-6' />
 
@@ -319,30 +311,30 @@ const Home = () => {
 
                         <div className='left p-5 flex flex-col '>
                             <span className='font-semibold text-gray-700 my-2'>Notes</span>
-                            <textarea className='border border-gray-300 rounded resize-none py-1 px-3 lg:w-80 md:w-80 sm:w-64 w-56' name="notes" id="notes" cols="60" rows="2"></textarea>
+                            <textarea onChange={onNotesChange} className='border border-gray-300 rounded resize-none py-1 px-3 lg:w-80 md:w-80 sm:w-64 w-56' name="notes" id="notes" cols="60" rows="2"></textarea>
                         </div>
 
                         <div className='right text-base p-5 w-fill'>
-                            <div className='flex 2xl:gap-56 xl:gap-36 lg:gap-24 md:gap-16 sm:gap-12 gap-7 my-3'>
+                            <div className='flex justify-between my-3'>
                                 <span>Subtotal</span>
-                                <span>{subTotal}</span>
+                                <span>{invoice.currency + ' ' + subTotal}</span>
                             </div>
-                            <div className='flex 2xl:gap-56 xl:gap-36 lg:gap-24 md:gap-16 sm:gap-12 my-3'>
+                            <div className='flex justify-between my-3'>
                                 <span>Tax</span>
-                                <span></span>
+                                <span>{invoice.currency + ' ' + totalTax}</span>
                             </div>
 
                             <hr />
                             <div className='flex 2xl:gap-56 xl:gap-36 lg:gap-24 md:gap-16 sm:gap-12 my-3 font-bold text-gray-800 2xl:text-lg lg:text-lg md:text-lg text-sm'>
                                 <span>Total({invoice.currency})</span>
-                                <span>{subTotal}</span>
+                                <span>{invoice.currency + ' ' + total}</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div className='flex justify-end gap-7 my-5'>
-                    <PDFGenerator items={items} sender={sender} recipient={recipient} invoice={invoice} imageURL={imageURL} subTotal={subTotal} />
+                    <PDFGenerator items={items} sender={sender} recipient={recipient} invoice={invoice} imageURL={imageURL} subTotal={subTotal} totalTax={totalTax} total={total} notes={notes} />
                 </div>
             </div>
 
