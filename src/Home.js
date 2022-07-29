@@ -9,6 +9,7 @@ const Home = () => {
     const onNotesChange = (e) => {
         setNotes({ ...notes, [e.target.name]: e.target.value })
     }
+    const [error, setError] = useState(false)
     //Invoice Related
     const [totalTax, setTotalTax] = useState(0)
     const [invoice, setInvoice] = useState({ invoiceNo: '', date: '', dueDate: '', currency: 'USD' })
@@ -64,7 +65,7 @@ const Home = () => {
 
         }
         else {
-            alert('Warning\n\nPlease enter all the data of item')
+            setError(true);
         }
     }
     const itemOnChange = (e) => {
@@ -116,7 +117,7 @@ const Home = () => {
             setShowSender(true)
         }
         else {
-            alert('Warning\n\nPlease enter all the data of item')
+            setError(true)
         }
     }
 
@@ -135,8 +136,19 @@ const Home = () => {
             setShowRecipient(true)
         }
         else {
-            alert('Warning\n\nPlease enter all the data of item')
+            setError(true)
         }
+    }
+
+    const closeModal = ()=>{
+        setShowModal(false);
+        setSender({ name: '', country: '', fname: '', lname: '', tax: '', Email: '', address: '', address2: '', Phone: '', Website: '' })
+    }
+    
+    const closeRecipientModel = ()=>{
+        setShowClientModal(false)
+        setRecipient({ Cname: '', Ccountry: '', Cfname: '', Clname: '', CEmail: '', Caddress: '', Caddress2: '', CPhone: '', extra: '' })
+
     }
 
 
@@ -298,7 +310,7 @@ const Home = () => {
                         </>
                         }
                     </div>
-                   {addMore &&  <div className='flex justify-between items-center pr-7'>
+                    {addMore && <div className='flex justify-between items-center pr-7'>
                         <input onChange={itemOnChange} type="text" name="item_desc" id="item_desc" placeholder='Description' className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-96' />
                         <i onClick={addItems} className="fa fa-check-circle text-emerald-500 cursor-pointer" aria-hidden="true"></i>
                     </div>}
@@ -353,18 +365,18 @@ const Home = () => {
                                 <div className="">
                                     <div className='flex justify-between'>
                                         <h3 className='font-semibold'>Sender Contact Details</h3>
-                                        <i onClick={() => { setShowModal(false) }} className="fa fa-times text-gray-700 cursor-pointer" aria-hidden="true"></i>
+                                        <i onClick={closeModal} className="fa fa-times text-gray-700 cursor-pointer" aria-hidden="true"></i>
                                     </div>
 
                                     <div className="">
                                         <div className='flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col items-center justify-between mt-10'>
                                             <div>
                                                 <label htmlFor="name" className="block text-sm font-medium text-gray-700">Comapny/Client Name</label>
-                                                <input onChange={onChangeSender} type="text" name="name" id="name" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Company/Client Name" />
+                                                <input value={sender.name} onChange={onChangeSender} type="text" name="name" id="name" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Company/Client Name" />
                                             </div>
                                             <div>
                                                 <label htmlFor="country" className="block text-sm font-medium text-gray-700">Country</label>
-                                                <select onChange={onChangeSender} id="country" name="country" className="border-gray-300 focus:outline-none p-1 border h-3/4 bg-transparent text-gray-800 text-sm font-bold rounded">
+                                                <select value={sender.country} defaultValue={'United State'} onChange={onChangeSender} id="country" name="country" className="border-gray-300 focus:outline-none p-1 border h-3/4 bg-transparent text-gray-800 text-sm font-bold rounded">
                                                     <option>United State</option>
                                                     <option>China</option>
                                                     <option>Pakistan</option>
@@ -378,29 +390,29 @@ const Home = () => {
                                         <div className='flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col sm:items-start justify-between mt-5'>
                                             <div className='flex flex-col'>
                                                 <label htmlFor="fname" className="block text-sm font-medium text-gray-700">Last Name</label>
-                                                <input onChange={onChangeSender} type="text" name="fname" id="fname" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="First Name" />
+                                                <input value={sender.fname} onChange={onChangeSender} type="text" name="fname" id="fname" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="First Name" />
                                             </div>
                                             <div className='flex flex-col'>
                                                 <label htmlFor="lname" className="block text-sm font-medium text-gray-700">Last Name</label>
-                                                <input onChange={onChangeSender} type="text" name="lname" id="lname" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Last Name" />
+                                                <input value={sender.lname} onChange={onChangeSender} type="text" name="lname" id="lname" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Last Name" />
                                             </div>
                                         </div>
 
                                         <div className='flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col sm:items-start justify-between mt-5'>
                                             <div className='flex flex-col'>
                                                 <label htmlFor="tax" className="block text-sm font-medium text-gray-700">Tax Registration No.</label>
-                                                <input onChange={onChangeSender} type="text" name="tax" id="tax" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Tax Registration No." />
+                                                <input value={sender.tax} onChange={onChangeSender} type="text" name="tax" id="tax" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Tax Registration No." />
                                             </div>
                                             <div className='flex flex-col'>
                                                 <label htmlFor="Email" className="block text-sm font-medium text-gray-700">Email</label>
-                                                <input onChange={onChangeSender} type="text" name="Email" id="Email" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Email" />
+                                                <input value={sender.Email} onChange={onChangeSender} type="text" name="Email" id="Email" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Email" />
                                             </div>
                                         </div>
 
                                         <div className='mt-5'>
                                             <div className='flex flex-col'>
                                                 <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address 1</label>
-                                                <textarea onChange={onChangeSender} className='border focus:outline-none border-gray-300 rounded py-1 px-3' name="address" id="address" rows="1"></textarea>
+                                                <textarea value={sender.address} onChange={onChangeSender} className='border focus:outline-none border-gray-300 rounded py-1 px-3' name="address" id="address" rows="1"></textarea>
                                             </div>
 
                                         </div>
@@ -408,7 +420,7 @@ const Home = () => {
                                         <div className='mt-5'>
                                             <div className='flex flex-col'>
                                                 <label htmlFor="address2" className="block text-sm font-medium text-gray-700">Address 2</label>
-                                                <textarea onChange={onChangeSender} className='border border-gray-300 rounded focus:outline-none py-1 px-3 ' name="address2" id="address2" rows="1"></textarea>
+                                                <textarea value={sender.address2} onChange={onChangeSender} className='border border-gray-300 rounded focus:outline-none py-1 px-3 ' name="address2" id="address2" rows="1"></textarea>
                                             </div>
 
                                         </div>
@@ -417,11 +429,11 @@ const Home = () => {
                                         <div className='flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col sm:items-start justify-between mt-5'>
                                             <div className='flex flex-col'>
                                                 <label htmlFor="Phone" className="block text-sm font-medium text-gray-700">Phone</label>
-                                                <input onChange={onChangeSender} type="text" name="Phone" id="Phone" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Phone" />
+                                                <input value={sender.Phone} onChange={onChangeSender} type="text" name="Phone" id="Phone" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Phone" />
                                             </div>
                                             <div className='flex flex-col'>
                                                 <label htmlFor="Website" className="block text-sm font-medium text-gray-700">Website</label>
-                                                <input onChange={onChangeSender} type="text" name="Website" id="Website" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Website" />
+                                                <input value={sender.Website} onChange={onChangeSender} type="text" name="Website" id="Website" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Website" />
                                             </div>
                                         </div>
                                     </div>
@@ -450,18 +462,18 @@ const Home = () => {
                                 <div className="">
                                     <div className='flex justify-between'>
                                         <h3 className='font-semibold'>New Client</h3>
-                                        <i onClick={() => { setShowClientModal(false) }} className="fa fa-times text-gray-700 cursor-pointer" aria-hidden="true"></i>
+                                        <i onClick={closeRecipientModel} className="fa fa-times text-gray-700 cursor-pointer" aria-hidden="true"></i>
                                     </div>
 
                                     <div className="">
                                         <div className='flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col items-center justify-between mt-10'>
                                             <div>
                                                 <label htmlFor="Cname" className="block text-sm font-medium text-gray-700">Comapny/Client Name</label>
-                                                <input onChange={onClientChange} type="text" name="Cname" id="Cname" className="border focus:outline-none border-gray-300 rounded p-2 " placeholder="Company/Client Name" />
+                                                <input value={recipient.Cname} onChange={onClientChange} type="text" name="Cname" id="Cname" className="border focus:outline-none border-gray-300 rounded p-2 " placeholder="Company/Client Name" />
                                             </div>
                                             <div>
                                                 <label htmlFor="Ccountry" className="block text-sm font-medium text-gray-700">Country</label>
-                                                <select onChange={onClientChange} id="Ccountry" name="Ccountry" className="border-gray-300 focus:outline-none p-1 border h-3/4 bg-transparent text-gray-800 text-sm font-bold rounded">
+                                                <select value={recipient.Ccountry} defaultValue={'United State'} onChange={onClientChange} id="Ccountry" name="Ccountry" className="border-gray-300 focus:outline-none p-1 border h-3/4 bg-transparent text-gray-800 text-sm font-bold rounded">
                                                     <option>United State</option>
                                                     <option>China</option>
                                                     <option>Pakistan</option>
@@ -475,29 +487,29 @@ const Home = () => {
                                         <div className='flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col sm:items-start justify-between mt-5'>
                                             <div className='flex flex-col'>
                                                 <label htmlFor="Cfname" className="block text-sm font-medium text-gray-700">First Name</label>
-                                                <input onChange={onClientChange} type="text" name="Cfname" id="Cfname" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="First Name" />
+                                                <input value={recipient.Cfname} onChange={onClientChange} type="text" name="Cfname" id="Cfname" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="First Name" />
                                             </div>
                                             <div className='flex flex-col'>
                                                 <label htmlFor="Clname" className="block text-sm font-medium text-gray-700">Last Name</label>
-                                                <input onChange={onClientChange} type="text" name="Clname" id="Clname" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Last Name" />
+                                                <input value={recipient.Clname} onChange={onClientChange} type="text" name="Clname" id="Clname" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Last Name" />
                                             </div>
                                         </div>
 
                                         <div className='flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col sm:items-start justify-between mt-5'>
                                             <div className='flex flex-col'>
                                                 <label htmlFor="CEmail" className="block text-sm font-medium text-gray-700">Email</label>
-                                                <input onChange={onClientChange} type="text" name="CEmail" id="CEmail" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Email" />
+                                                <input value={recipient.CEmail} onChange={onClientChange} type="text" name="CEmail" id="CEmail" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Email" />
                                             </div>
                                             <div className='flex flex-col'>
                                                 <label htmlFor="CPhone" className="block text-sm font-medium text-gray-700">Phone</label>
-                                                <input onChange={onClientChange} type="text" name="CPhone" id="CPhone" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Phone" />
+                                                <input value={recipient.CPhone} onChange={onClientChange} type="text" name="CPhone" id="CPhone" className="border focus:outline-none border-gray-300 rounded p-2" placeholder="Phone" />
                                             </div>
                                         </div>
 
                                         <div className='mt-5'>
                                             <div className='flex flex-col'>
                                                 <label htmlFor="Caddress" className="block text-sm font-medium text-gray-700">Address 1</label>
-                                                <textarea onChange={onClientChange} className='border focus:outline-none border-gray-300 rounded py-1 px-3' name="Caddress" id="Caddress" rows="1"></textarea>
+                                                <textarea value={recipient.Caddress} onChange={onClientChange} className='border focus:outline-none border-gray-300 rounded py-1 px-3' name="Caddress" id="Caddress" rows="1"></textarea>
                                             </div>
 
                                         </div>
@@ -505,7 +517,7 @@ const Home = () => {
                                         <div className='mt-5'>
                                             <div className='flex flex-col'>
                                                 <label htmlFor="Caddress2" className="block text-sm font-medium text-gray-700">Address 2</label>
-                                                <textarea onChange={onClientChange} className='border border-gray-300 rounded focus:outline-none py-1 px-3' name="Caddress2" id="Caddress2" rows="1"></textarea>
+                                                <textarea value={recipient.Caddress2} onChange={onClientChange} className='border border-gray-300 rounded focus:outline-none py-1 px-3' name="Caddress2" id="Caddress2" rows="1"></textarea>
                                             </div>
 
                                         </div>
@@ -514,7 +526,7 @@ const Home = () => {
                                         <div className='mt-5'>
                                             <div className='flex flex-col'>
                                                 <label htmlFor="extra" className="block text-sm font-medium text-gray-700">Extra Data</label>
-                                                <input onChange={onClientChange} type="text" name="extra" id="extra" className="border focus:outline-none border-gray-300 rounded p-2 w-fill" placeholder="Extra Data" />
+                                                <input value={recipient.extra} onChange={onClientChange} type="text" name="extra" id="extra" className="border focus:outline-none border-gray-300 rounded p-2 w-fill" placeholder="Extra Data" />
                                             </div>
                                         </div>
                                     </div>
@@ -523,6 +535,41 @@ const Home = () => {
                             <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                                 <button onClick={updateRecipient} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-emerald-500 text-base font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:bg-emerald-500 sm:ml-3 sm:w-auto sm:text-sm">Submit</button>
 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* //ALERT MODEL */}
+
+            <div className={`relative z-10 ${!error && 'hidden'}`} aria-labelledby="modal-title" role="dialog" aria-modal="true">
+
+                <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+
+                <div className="fixed z-10 inset-0 overflow-y-auto">
+                    <div className="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+
+                        <div className="relative bg-white border border-red-600 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                            <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                <div className="sm:flex sm:items-start">
+                                    <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+
+                                        <svg className="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                        </svg>
+                                    </div>
+                                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                        <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">Warning</h3>
+                                        <div className="mt-2">
+                                            <p className="text-sm text-gray-500">Please Enter all the fields required.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                                <button onClick={()=>{setError(false)}} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">Ok</button>
+                               
                             </div>
                         </div>
                     </div>
