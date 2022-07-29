@@ -303,10 +303,6 @@ const Home = () => {
                                     </div>
                                 </div>
                             </div>
-                            {/* <div className='flex justify-between items-center pr-7'>
-                                <input onChange={itemOnChange} type="text" name="item_desc" id="item_desc" placeholder='Description' className='mt-1  border border-gray-300 rounded py-1 px-3 placeholder:font-normal placeholder:text-sm lg:w-96' />
-                                <i onClick={addItems} className="fa fa-check-circle text-emerald-500 cursor-pointer" aria-hidden="true"></i>
-                            </div> */}
                         </>
                         }
                     </div>
